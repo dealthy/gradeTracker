@@ -1,27 +1,30 @@
 package gradeTrackerSelf.gui;
 
-public class assessments {
+public abstract class assessments implements calculatingMethods{
 
-    public String topic;
-    public int dateD;
+    private String topic;
+    private int dateD;
     //can only be 1 - 31
-    public int dateM;
+    private int dateM;
     //can only be 1 - 12
-    public int dateY;
+    private int dateY;
     //4 digit number
-    public int givenLevel;
+    private int level;
     //used for overall score with weighting
     //optional: will implement 85 - 75 scale after calculating the percentage
     public int realScore;
     //scores got
-    public int scoreOutOf;
+    private int scoreOutOf;
     //score out of
-    public double testPercentage;
-    public double weight;
+    private String testPercentage;
+    private double weight;
     //the weight that the work occupies in the final grade
+    private int instanceCount;
+    //number of instances that don't have specific weighting
 
     //default constructors
     public assessments() {
+
         this.topic = "Theory of Knowledge Blog Post";
         this.dateD = 1;
         this.dateM = 9;
@@ -30,44 +33,58 @@ public class assessments {
         this.realScore = 10;
         this.scoreOutOf = 10;
         this.testPercentage = getPercentage(this.realScore, this.scoreOutOf);
-    }
-    
-    //constructor without level
-    public assessments(String name, int dateD, int dateM, int dateY, int realScore, int scoreOutOf) {
-        this.topic = name;
-        this.dateD = dateD;
-        this.dateM = dateM;
-        this.dateY = dateY;
-        this.givenLevel = getLevel(this.realScore, this.scoreOutOf);
-        this.realScore = realScore;
-        this.scoreOutOf = scoreOutOf;
-        this.testPercentage = getPercentage(this.realScore, this.scoreOutOf);
-    }
-    
-    //constructor with level
-    public assessments(String name, int dateD, int dateM, int dateY, int givenLevel, int realScore, int scoreOutOf) {
-        this.topic = name;
-        this.dateD = dateD;
-        this.dateM = dateM;
-        this.dateY = dateY;
-        this.givenLevel = givenLevel;
-        this.realScore = realScore;
-        this.scoreOutOf = scoreOutOf;
-        this.testPercentage = getPercentage(this.realScore, this.scoreOutOf);
+        this.weight = 0;
+        this.instanceCount = 1;
+
     }
 
-    public static double getPercentage(int realScore, int scoreOutOf) {
+    //method to get the percentage of the test to 2 decimal places precision
+    public String findPercentage(int realScore, int scoreOutOf) {
 
-        //get the test percentage to one decimal place percision
+        double percent = (double) realScore / scoreOutOf;
+        final double PRECISION = 0.01;
+        percent = (percent - (percent % PRECISION)) * 100; 
+        String percentage = percent + "%";
+
         return percentage;
         
     }
 
-    public static int getLevel(int realScore, int scoreOutOf) {
+    //get the level by the percentage using the 85-75-65-etc scale
+    public int findLevel(int realScore, int scoreOutOf) {
 
-        double percentage = getPercentage(realScore, scoreOutOf);
+        Double percentage = new Double();
+        percentage = Double.valueOf(getPercentage(this.realScore, this.scoreOutOf));
+        int level = 0;
+
         //get the overall grade using 85 - 75 scale
+        if(percentage.compareTo(Double.valueOf(85)) >= 1) {
+            return 7;
+        } else if(percentage.compareTo(Double.valueOf(75)) >= 1) {
+            return 6;
+        } else if(percentage.compareTo(Double.valueOf(65)) >= 1) {
+            return 5;
+        } else if(percentage.compareTo(Double.valueOf(55)) >= 1) {
+            return 4;
+        } else if(percentage.compareTo(Double.valueOf(45)) >= 1) {
+            return 3;
+        } else if(percentage.compareTo(Double.valueOf(35)) >= 1) {
+            return 2;
+        } else if(percentage.compareTo(Double.valueOf(25)) >= 1) {
+            return 1;
+        } else {
+            return 0;
+        }
+
         return level;
+
+    }
+
+    //if there is no specific weighting for the test
+    public double findWeight(int interchangeableWeight, int numToDistribute) {
+
+        double eachWeight = (double) numToDistribute / interchangeableWeight;
+        return eachWeight;  
 
     }
 

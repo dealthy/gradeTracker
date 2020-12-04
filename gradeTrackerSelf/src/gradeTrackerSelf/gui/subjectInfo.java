@@ -22,6 +22,7 @@ public class subjectInfo {
 
 	//subject with basic info
 	public subjectInfo(String name, boolean isHL, String teacher) {
+
 		this.name = name;
 		this.isHL = isHL;
 		this.overallLevel = 0;
@@ -29,10 +30,15 @@ public class subjectInfo {
 		this.markBook = new ArrayList<assessments>();
 	}
 
-	public static getScore(assessments test) {
+	public getScore(assessments test) {
 
 		//a for loop that goes through all the scores of the test scores
 		//using their weights to get the final score and fit it though the criterias
+
+		for (assessments i : this.markBook) {
+			
+		}
+		
 
 	}
 
